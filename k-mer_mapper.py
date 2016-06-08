@@ -35,31 +35,48 @@ ReadsFile.close()
 
 # step 3: search reference with k-mers, each match gets k-mer value added to the sequence
 # open reference
-'''
+
 RefFileName=sys.argv[2]
 
 RefFile=open(RefFileName,'r')
 
 refseqs={}
-sequence=''
 
 for seq_record in SeqIO.parse(RefFile, "fasta"):
-    print(seq_record.id)
-    print(seq_record.seq)
+	#print(seq_record.id)
+	header=seq_record.id
+	#print(seq_record.seq)
+	seq=str(seq_record.seq)
+	#print(hash.keys())
+	for hashkey in hash.keys():
+		print(hashkey)
+		if hashkey in seq:
+			#print(hash[hashkey])
+			#print('printing')
+			#print(refseqs.get(seq))
+			adding=0
+			if seq in refseqs:
+				adding=refseqs[seq][1]
+				print(str(adding)+" alreaddy mapped")
+			refseqs[seq]=[header, adding + hash[hashkey]]
+			print(str(hash[hashkey]) +" is new hash to add")
+			print(refseqs[seq])
+
+	#refseqs[sequence][0] -> to access readnumber
 
 
 
 
-#make seq key, make header as firs element in list, number of times it appears second element
+#make seq key, make header as first element in list, number of times it appears second element
 
 
-print(refseqs)
+#print(refseqs)
 
 
 RefFile.close()
 
 
-'''
+
 
 
 
