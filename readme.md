@@ -55,8 +55,6 @@ sim_reads cow/cow_mRNA_only_4seq{,reads}.fasta
 
 From that I use only first 21 reads for practice.
 
-
-
 The tools I used were... See analysis files at (links to analysis files).
 
 ## Results
