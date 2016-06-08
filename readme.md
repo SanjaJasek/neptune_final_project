@@ -20,17 +20,42 @@ Some guidelines and tips:
 
 OK, here we go.
 
-# Title of my project
+# k-mer mapper
 
 ## Introduction and Goals
 
 The goal of my project is to answer the question, What is...?
 
+The goal of my project is to write a k-mer mapper from scratch using python.
+
+
+Procedure:
+reference - I will download a transcriptome from the internet (fasta)
+reads - generate with sim_reads (fastq)
+
+1. k-merize reads
+2. generate hash table = dictionary where: 
+	* key=k-mer sequence
+	* value = number of times k-mer appears in fastq
+3. search reference with k-mers, each match gets k-mer value added to the sequence
+
+
+
 The methods I will use to do this are...
+
 
 The data I will use are (my own data/ data publicly available at YYY/ simulations)
 
 ## Methods
+
+I downloaded cow transcriptome from NCBI. I'm using only the first 4 sequences for practice.
+I simuleted reads with sim_reads with default settings:
+
+sim_reads cow/cow_mRNA_only_4seq{,reads}.fasta
+
+From that I use only first 21 reads for practice.
+
+
 
 The tools I used were... See analysis files at (links to analysis files).
 
@@ -50,4 +75,5 @@ If I did these analyses again, I would...
 
 ## References
 
+Put references here
 
