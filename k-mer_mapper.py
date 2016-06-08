@@ -2,21 +2,22 @@
 
 import sys
 
-# step 1: open file:
+'''
+# step 1: open reads file:
 
 arguments = sys.argv
 print(arguments)
 
-InFileName=sys.argv[1]
+ReadsFileName=sys.argv[1]
 
-InFile=open(InFileName,'r')
+ReadsFile=open(ReadsFileName,'r')
 
 
 # step 2: k-merize reads
 
 hash={}
 
-for Line in InFile:
+for Line in ReadsFile:
 	Line=Line.strip() #remove whitespace in beggining and end, because print again adds line endings
 	if not '>' in Line:
 		length=len(Line)
@@ -32,5 +33,23 @@ for Line in InFile:
 
 print(hash)
 
+ReadsFile.close()
+'''
+# step 3: search reference with k-mers, each match gets k-mer value added to the sequence
+# open reference
+# remove newlines in fasta
+RefFileName=sys.argv[2]
 
-InFile.close()
+RefFile=open(RefFileName,'r')
+
+for Line in RefFile:
+	Line=Line.strip() #remove whitespace in beggining and end, because print again adds line endings
+	print(Line)
+RefFile.close()
+
+
+
+
+
+
+
