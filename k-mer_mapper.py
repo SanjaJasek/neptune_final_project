@@ -13,6 +13,7 @@ ReadsFileName=sys.argv[1]
 
 ReadsFile=open(ReadsFileName,'r')
 
+ksize=int(sys.argv[3])
 
 # step 2: k-merize reads
 
@@ -21,17 +22,16 @@ hash={}
 for read in SeqIO.parse(ReadsFile, "fasta"):
 	ReadSequence=str(read.seq)
 	length=len(ReadSequence)
-	length=length-15
+	length=length-ksize
 	for num in range(0,length):
 		first=num
-		last=num+15
+		last=num+ksize
 		kmer=ReadSequence[first:last]
 		hash[kmer]=hash.get(kmer,0)+1
 
 ReadsFile.close()
 
 # step 3: search reference with k-mers, each match gets k-mer value added to the sequence
-# open reference
 
 RefFileName=sys.argv[2]
 
@@ -44,11 +44,10 @@ for seq_record in SeqIO.parse(RefFile, "fasta"):
 	header=seq_record.id
 
 	seq=str(seq_record.seq)
-	#print(hash.keys())
+
 	for hashkey in hash.keys():
 		#print(hashkey)
 		if hashkey in seq:
-			#print(hash[hashkey])
 			#print(refseqs.get(seq))
 			refseqs[header]=refseqs.get(header,0)+hash[hashkey]
 			#print(str(hash[hashkey]) +" is new hash to add")
@@ -57,11 +56,6 @@ for seq_record in SeqIO.parse(RefFile, "fasta"):
 	print(str(refseqs[header])+" k-mers map to "+header)
 
 	#refseqs[sequence][0] -> to access first number in list with key "sequence"
-
-
-
-
-#print(refseqs)
 
 
 RefFile.close()
