@@ -2,7 +2,7 @@
 
 import sys
 from Bio import SeqIO
-
+import math, string
 
 # step 1: open reads file:
 
@@ -15,7 +15,19 @@ ReadsFile=open(ReadsFileName,'r')
 
 ksize=int(sys.argv[3])
 
-# step 2: k-merize reads
+
+def H(kseq):
+	entropy = 0
+	for nucl in 'ATGC':
+		nuclcount=float(kseq.count(nucl))
+        	p_x = nuclcount/ksize
+		print('p_x for {} is {}'.format(nucl, p_x))
+        	if p_x > 0:
+         		entropy += - p_x*math.log(p_x, 2)
+	return entropy
+
+#################################################
+# k-merize reads
 
 hash={}
 
@@ -32,7 +44,21 @@ for read in SeqIO.parse(ReadsFile, "fasta"):
 
 ReadsFile.close()
 
-# step 3: search reference with k-mers, each match gets k-mer value added to the sequence
+# calculate channon entropy for k-mers:
+
+
+for hk in hash.keys():
+	sh=H(hk)
+	print('entropy for {} is {},'.format(hk,sh))
+
+
+
+
+
+
+
+###############################################################
+# search reference with k-mers, each match gets k-mer value added to the sequence
 
 RefFileName=sys.argv[2]
 
@@ -59,7 +85,6 @@ for seq_record in SeqIO.parse(RefFile, "fasta"):
 
 	print(header + "\t" + str(refseqs[header]) + "\t" + str(refseqs[header]/ksize) )
 
-	#refseqs[sequence][0] -> to access first number in list with key "sequence"
 
 RefFile.close()
 
