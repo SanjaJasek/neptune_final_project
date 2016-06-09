@@ -40,6 +40,9 @@ RefFile=open(RefFileName,'r')
 
 refseqs={}
 
+# printing header for output table:
+print("Sequence description\tNumber of mapped k-mers\tApproximate number of mapped reads")
+
 for seq_record in SeqIO.parse(RefFile, "fasta"):
 
 	header=seq_record.description
@@ -54,7 +57,7 @@ for seq_record in SeqIO.parse(RefFile, "fasta"):
 			count = refseqs.get(header,0)+hash[hashkey]
 		refseqs[header] = count
 
-	print(str(refseqs[header])+" k-mers map to "+header)
+	print(header + "\t" + str(refseqs[header]) + "\t" + str(refseqs[header]/ksize) )
 
 	#refseqs[sequence][0] -> to access first number in list with key "sequence"
 
@@ -62,7 +65,6 @@ RefFile.close()
 
 
 # TODO:
-# tabular output: header, no of kmers, no of mapped reads
 # mask low complexity regions
 # mask is optional argument
 # test different kmer sizes, how they affect mapping
