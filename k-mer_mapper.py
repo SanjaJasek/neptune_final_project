@@ -6,13 +6,26 @@ from Bio import SeqIO
 import math, string
 import matplotlib.pyplot as plt
 import numpy as np
+import argparse
 
-arguments = sys.argv
-print(arguments)
 
-ReadsFileName=sys.argv[1]
-RefFileName=sys.argv[2]
-ksize=int(sys.argv[3])
+#arguments = sys.argv
+#print(arguments)
+#ReadsFileName=sys.argv[1]
+#RefFileName=sys.argv[2]
+#ksize=int(sys.argv[3])
+
+parser = argparse.ArgumentParser()
+parser.add_argument('-reads', action="store", dest="ReadsFileName")
+parser.add_argument('-ref', action="store", dest="RefFileName")
+parser.add_argument('-k', action="store", dest="ksize", type=int)
+#parser.add_argument('-m', action="store_true", default=False)
+args = parser.parse_args()
+ReadsFileName=args.ReadsFileName
+RefFileName=args.RefFileName
+ksize=int(args.ksize)
+print(parser)
+
 
 
 def H(kseq):
@@ -124,7 +137,6 @@ RefFile.close()
 
 # TODO:
 # has to accept fastq files for reads, not fasta
-# mask low complexity regions
 # mask is optional argument
 # test different kmer sizes, how they affect mapping
 
