@@ -3,7 +3,7 @@
 import sys
 from Bio import SeqIO
 import math, string
-
+import matplotlib.pyplot as plt
 
 arguments = sys.argv
 print(arguments)
@@ -18,7 +18,7 @@ def H(kseq):
 	for nucl in 'ATGC':
 		nuclcount=float(kseq.count(nucl))
         	p_x = nuclcount/ksize
-		print('p_x for {} is {}'.format(nucl, p_x))
+		#print('p_x for {} is {}'.format(nucl, p_x))
         	if p_x > 0:
          		entropy += - p_x*math.log(p_x, 2)
 	return entropy
@@ -48,12 +48,17 @@ ReadsFile.close()
 
 # calculate channon entropy for k-mers:
 
-
+Hdict={}
 for hk in hash.keys():
 	sh=H(hk)
 	print('entropy for {} is {},'.format(hk,sh))
+	Hdict[hk]=sh
+	print(Hdict[hk])
 
-
+print(sorted(Hdict.values()))
+plt.plot(sorted(Hdict.values()))
+plt.ylabel('Shannon entropy')
+plt.show()
 
 
 
