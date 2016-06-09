@@ -1,12 +1,9 @@
 #!/usr/bin/env python
 
-import sys
-import os
+import sys, os, math, argparse
 from Bio import SeqIO
-import math, string
 import matplotlib.pyplot as plt
 import numpy as np
-import argparse
 
 
 #arguments = sys.argv
@@ -16,16 +13,24 @@ import argparse
 #ksize=int(sys.argv[3])
 
 parser = argparse.ArgumentParser()
-parser.add_argument('-reads', action="store", dest="ReadsFileName")
-parser.add_argument('-ref', action="store", dest="RefFileName")
-parser.add_argument('-k', action="store", dest="ksize", type=int)
-#parser.add_argument('-m', action="store_true", default=False)
-args = parser.parse_args()
-ReadsFileName=args.ReadsFileName
-RefFileName=args.RefFileName
-ksize=int(args.ksize)
-print(parser)
+parser.add_argument('-reads', action="store", dest="ReadsFileName", help="file with reads")
+parser.add_argument('-ref', action="store", dest="RefFileName", help="file with reference")
+parser.add_argument('-k', action="store", dest="ksize", type=int, help="k-mer size")
+parser.add_argument('-m', action="store_true", default=False, help="mask low complexity regions")
+#args = parser.parse_args()
+#ReadsFileName=args.ReadsFileName
+#RefFileName=args.RefFileName
+#ksize=int(args.ksize)
+#print(parser)
 
+try:
+	args = parser.parse_args()
+	ReadsFileName=args.ReadsFileName
+	RefFileName=args.RefFileName
+	ksize=int(args.ksize)
+except:
+	parser.print_help()
+	sys.exit(0)
 
 
 def H(kseq):
@@ -92,11 +97,9 @@ for hk in hash.keys():
 	Hdict[hk]=sh
 	#print(Hdict[hk])
 
-plot(Hdict.values())
 
-kmerInfo(Hdict.values())
-
-remove_lowsh(Hdict)
+if args.m:
+	remove_lowsh(Hdict)
 
 plot(Hdict.values())
 
