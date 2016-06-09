@@ -4,15 +4,12 @@ import sys
 from Bio import SeqIO
 import math, string
 
-# step 1: open reads file:
 
 arguments = sys.argv
 print(arguments)
 
 ReadsFileName=sys.argv[1]
-
-ReadsFile=open(ReadsFileName,'r')
-
+RefFileName=sys.argv[2]
 ksize=int(sys.argv[3])
 
 
@@ -26,8 +23,13 @@ def H(kseq):
          		entropy += - p_x*math.log(p_x, 2)
 	return entropy
 
+
+
+
 #################################################
 # k-merize reads
+
+ReadsFile=open(ReadsFileName,'r')
 
 hash={}
 
@@ -60,7 +62,6 @@ for hk in hash.keys():
 ###############################################################
 # search reference with k-mers, each match gets k-mer value added to the sequence
 
-RefFileName=sys.argv[2]
 
 RefFile=open(RefFileName,'r')
 
@@ -81,7 +82,7 @@ for seq_record in SeqIO.parse(RefFile, "fasta"):
 		if hashkey in seq:
 			#print(refseqs.get(seq))
 			count = refseqs.get(header,0)+hash[hashkey]
-		refseqs[header] = count
+		refseqs[header] = float(count)
 
 	print(header + "\t" + str(refseqs[header]) + "\t" + str(refseqs[header]/ksize) )
 
