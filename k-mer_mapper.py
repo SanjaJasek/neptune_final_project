@@ -27,6 +27,7 @@ for read in SeqIO.parse(ReadsFile, "fasta"):
 		first=num
 		last=num+ksize
 		kmer=ReadSequence[first:last]
+		assert( len(kmer) == ksize )
 		hash[kmer]=hash.get(kmer,0)+1
 
 ReadsFile.close()
@@ -41,28 +42,30 @@ refseqs={}
 
 for seq_record in SeqIO.parse(RefFile, "fasta"):
 
-	header=seq_record.id
+	header=seq_record.description
 
 	seq=str(seq_record.seq)
 
+	count = 0
 	for hashkey in hash.keys():
 		#print(hashkey)
 		if hashkey in seq:
 			#print(refseqs.get(seq))
-			refseqs[header]=refseqs.get(header,0)+hash[hashkey]
-			#print(str(hash[hashkey]) +" is new hash to add")
-		else:
-			refseqs[header]=refseqs.get(header,0)
+			count = refseqs.get(header,0)+hash[hashkey]
+		refseqs[header] = count
+
 	print(str(refseqs[header])+" k-mers map to "+header)
 
 	#refseqs[sequence][0] -> to access first number in list with key "sequence"
 
-
 RefFile.close()
 
 
-
-
+# TODO:
+# tabular output: header, no of kmers, no of mapped reads
+# mask low complexity regions
+# mask is optional argument
+# test different kmer sizes, how they affect mapping
 
 
 
