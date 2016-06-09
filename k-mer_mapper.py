@@ -38,6 +38,16 @@ def kmerInfo(stuff):
 	mean=np.mean(stuff)
 	median=np.median(stuff)
 	print("Number of k-mers: {}, mean Shannon entropy: {}.".format(number,mean))
+
+def remove_lowsh(Dict):
+	print("Removing low complexity k-mers.")
+	for key in Dict.keys():
+		val=float(Dict[key])
+		#print(val)
+		if val < 1:
+			del Dict[key]
+			del hash[key]
+	
 	
 
 #################################################
@@ -65,13 +75,21 @@ ReadsFile.close()
 Hdict={}
 for hk in hash.keys():
 	sh=H(hk)
-	print('entropy for {} is {},'.format(hk,sh))
+	#print('entropy for {} is {},'.format(hk,sh))
 	Hdict[hk]=sh
 	#print(Hdict[hk])
 
 plot(Hdict.values())
 
 kmerInfo(Hdict.values())
+
+remove_lowsh(Hdict)
+
+plot(Hdict.values())
+
+kmerInfo(Hdict.values())
+
+#print(hash)
 
 ###############################################################
 # search reference with k-mers, each match gets k-mer value added to the sequence
