@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 
 import sys
+import os
 from Bio import SeqIO
 import math, string
 import matplotlib.pyplot as plt
+import numpy as np
 
 arguments = sys.argv
 print(arguments)
@@ -23,8 +25,20 @@ def H(kseq):
          		entropy += - p_x*math.log(p_x, 2)
 	return entropy
 
+def plot(stuff):
+	#print(sorted(Hdict.values()))
+	plt.plot(sorted(stuff))
+	plt.ylabel('Shannon entropy')
+	#plt.show()
+	namebase=os.path.splitext(ReadsFileName)[0]
+	plt.savefig('{}_Shannon_entropy_ksize_{}.png'.format(namebase, ksize))
 
-
+def kmerInfo(stuff):
+	number=len(stuff)
+	mean=np.mean(stuff)
+	median=np.median(stuff)
+	print("Number of k-mers: {}, mean Shannon entropy: {}.".format(number,mean))
+	
 
 #################################################
 # k-merize reads
@@ -46,23 +60,18 @@ for read in SeqIO.parse(ReadsFile, "fasta"):
 
 ReadsFile.close()
 
-# calculate channon entropy for k-mers:
+# calculate shannon entropy for k-mers:
 
 Hdict={}
 for hk in hash.keys():
 	sh=H(hk)
 	print('entropy for {} is {},'.format(hk,sh))
 	Hdict[hk]=sh
-	print(Hdict[hk])
+	#print(Hdict[hk])
 
-print(sorted(Hdict.values()))
-plt.plot(sorted(Hdict.values()))
-plt.ylabel('Shannon entropy')
-plt.show()
+plot(Hdict.values())
 
-
-
-
+kmerInfo(Hdict.values())
 
 ###############################################################
 # search reference with k-mers, each match gets k-mer value added to the sequence
@@ -96,6 +105,7 @@ RefFile.close()
 
 
 # TODO:
+# has to accept fastq files for reads, not fasta
 # mask low complexity regions
 # mask is optional argument
 # test different kmer sizes, how they affect mapping
