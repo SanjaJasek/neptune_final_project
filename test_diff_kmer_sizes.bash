@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash -eux
 
 mapper="./k-mer_mapper.py"
 reads="cow_mRNA_reads.fasta"
@@ -19,7 +19,7 @@ maskout="mask_stats.txt"
 # write headers:
 header () {
 fil=$1
-echo -e "k-mer size\tmean Shannon entorpy\tmean number of k-mers per sequence\tmean number of mapped reads per sequence" > $fil
+echo -e "k-mer size\tmean Shannon entropy\tmean number of k-mers per sequence\tmean number of mapped reads per sequence" > $fil
 }
 
 header $nomaskout
@@ -29,7 +29,7 @@ stats () {
 stfil=$1
 string=$2
 
-value=$( grep "$dtring" "$stfil" )
+value=$( grep "$string" "$stfil" )
 value=${value##*: }
 
 #return $value
@@ -60,7 +60,7 @@ do
 	stats $nomask "reads per sequence"
 	nomaskr=$value
 
-	echo -e "$nomaskH\t$nomaskk\t$nomaskr" >> $nomaskout
+	echo -e "$thr\t$nomaskH\t$nomaskk\t$nomaskr" >> $nomaskout
 
 	# map reads with mask
 
@@ -85,6 +85,6 @@ do
 	stats $mask "reads per sequence"
 	maskr=$value
 
-	echo -e "$maskH\t$maskk\t$maskr" >> $maskout
+	echo -e "$thr\t$maskH\t$maskk\t$maskr" >> $maskout
 done
 

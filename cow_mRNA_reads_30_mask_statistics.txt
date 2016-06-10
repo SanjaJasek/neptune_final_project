@@ -1,0 +1,16 @@
+INPUT
+
+Reads file: cow_mRNA_reads.fasta
+Reference file: cow_mRNA.fasta
+k-mer size: 30
+
+Masking low complexity regions.
+
+
+STATISTICS
+
+Number of k-mers: 423704
+Mean Shannon entropy: 1.86932536568
+Number of reference sequences: 20
+Mean number of mapped k-mers per sequence: 26020.75
+Mean number of mapped reads per sequence: 867.358333333
