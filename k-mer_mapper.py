@@ -107,10 +107,17 @@ for read in SeqIO.parse(ReadsFile, "fasta"):
 	ReadSequence=str(read.seq)
 	length=len(ReadSequence)
 	length=length-ksize
+
+	rev=(reverse_complement(ReadSequence))
+
 	for num in range(0,length):
 		first=num
 		last=num+ksize
 		kmer=ReadSequence[first:last]
+		assert( len(kmer) == ksize )
+		hash[kmer]=hash.get(kmer,0)+1
+
+		kmer=rev[first:last]
 		assert( len(kmer) == ksize )
 		hash[kmer]=hash.get(kmer,0)+1
 
@@ -190,6 +197,7 @@ out.close
 
 # TODO:
 # has to accept fastq files for reads, not fasta
+# incorporate mapping in reverse direction in a more logical way
 # test different kmer sizes, how they affect mapping
 
 
