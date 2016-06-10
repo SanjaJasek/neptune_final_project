@@ -14,12 +14,12 @@ nomaskout="nomask_stats.txt"
 maskHs=()
 maskks=()
 maskrs=()
-nomaskout="mask_stats.txt"
+maskout="mask_stats.txt"
 
 # write headers:
 header () {
 fil=$1
-echo "k-mer size\tmean Shannon entorpy\tmean number of k-mers per sequence\tmean number of mapped reads per sequence" > $fil
+echo -e "k-mer size\tmean Shannon entorpy\tmean number of k-mers per sequence\tmean number of mapped reads per sequence" > $fil
 }
 
 header $nomaskout
@@ -32,7 +32,7 @@ string=$2
 value=$( grep "$dtring" "$stfil" )
 value=${value##*: }
 
-return $value
+#return $value
 #echo $value
 }
 
@@ -45,16 +45,22 @@ do
 
 	# get stats
 	
-	nomaskH=$(stats $nomask "Shannon entropy")
-	nomaskHs+=($nomaskH)
+	#nomaskH=$(stats $nomask "Shannon entropy")
+	#nomaskHs+=($nomaskH)
+	stats $nomask "Shannon entropy"
+	nomaskH=$value
 	
-	nomaskk=$( stats $nomask "k-mers per sequence"  )
-	nomaskks+=($nomaskk)
+	#nomaskk=$( stats $nomask "k-mers per sequence"  )
+	#nomaskks+=($nomaskk)
+	stats $nomask "k-mers per sequence" 
+	nomaskk=$value
 
-	nomaskr=$( stats $nomask "k-mers per sequence"  )
-	nomaskrs+=($nomasrk)
+	#nomaskr=$( stats $nomask "reads per sequence"  )
+	#nomaskrs+=($nomasrk)
+	stats $nomask "reads per sequence"
+	nomaskr=$value
 
-	echo "$nomaskH\t$nomaskk\t$nomaskr" >> $nomaskout
+	echo -e "$nomaskH\t$nomaskk\t$nomaskr" >> $nomaskout
 
 	# map reads with mask
 
@@ -64,15 +70,21 @@ do
 
 	# get stats
 	
-	maskH=$(stats $mask "Shannon entropy")
-	maskHs+=($maskH)
+	#maskH=$(stats $mask "Shannon entropy")
+	#maskHs+=($maskH)
+	stats $mask "Shannon entropy"
+	maskH=$value
 	
-	maskk=$( stats $mask "k-mers per sequence"  )
-	maskks+=($maskk)
+	#maskk=$( stats $mask "k-mers per sequence"  )
+	#maskks+=($maskk)
+	stats $mask "k-mers per sequence" 
+	maskk=$value
 
-	maskr=$( stats $mask "k-mers per sequence"  )
-	masrks+=($masrk)
+	#maskr=$( stats $mask "reads per sequence"  )
+	#masrks+=($masrk)
+	stats $mask "reads per sequence"
+	maskr=$value
 
-	echo "$maskH\t$maskk\t$maskr" >> $maskout
+	echo -e "$maskH\t$maskk\t$maskr" >> $maskout
 done
 
