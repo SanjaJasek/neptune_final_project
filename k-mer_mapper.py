@@ -54,7 +54,7 @@ def kmerInfo(stuff):
 	number=len(stuff)
 	mean=np.mean(stuff)
 	median=np.median(stuff)
-	statout.write("\nSTATISTICS\n\nNumber of k-mers: {}\nMean Shannon entropy: {}.".format(number,mean))
+	statout.write("\nSTATISTICS\n\nNumber of k-mers: {}\nMean Shannon entropy: {}".format(number,mean))
 
 def remove_lowsh(Dict):
 	#print("Removing low complexity k-mers.")
@@ -64,6 +64,22 @@ def remove_lowsh(Dict):
 		if val < 1:
 			del Dict[key]
 			del hash[key]
+
+def reverse_complement(String):
+	newstring=''
+	for a in String[::-1]:
+		#print(a)
+		if a == 'A':
+			a=a.replace('A','T')
+		elif a == 'T':
+			a=a.replace('T','A')
+		elif a == 'G':
+			a=a.replace('G','C')
+		elif a == 'C':
+			a=a.replace('C','G')
+		newstring=newstring + a
+	#print(newstring)
+	return newstring
 	
 	
 
@@ -71,14 +87,17 @@ def remove_lowsh(Dict):
 # k-merize reads
 
 namebase=os.path.splitext(ReadsFileName)[0]
-
-statoutPath=('{}_{}_statistics.txt'.format(namebase, ksize))
-outPath=('{}_{}_out.txt'.format(namebase, ksize))
+if args.m:
+	statoutPath=('{}_{}_mask_statistics.txt'.format(namebase, ksize))
+	outPath=('{}_{}_mask_out.txt'.format(namebase, ksize))
+else:
+	statoutPath=('{}_{}_statistics.txt'.format(namebase, ksize))
+	outPath=('{}_{}_out.txt'.format(namebase, ksize))
 
 statout=open(statoutPath,'w')
 out=open(outPath,'w')
 
-statout.write('INPUT\n\nReads file: {}\nReference file: {}\nk-mer size: {}.\n\n'.format(ReadsFileName, RefFileName, ksize))
+statout.write('INPUT\n\nReads file: {}\nReference file: {}\nk-mer size: {}\n\n'.format(ReadsFileName, RefFileName, ksize))
 
 ReadsFile=open(ReadsFileName,'r')
 
@@ -95,6 +114,7 @@ for read in SeqIO.parse(ReadsFile, "fasta"):
 		assert( len(kmer) == ksize )
 		hash[kmer]=hash.get(kmer,0)+1
 
+	
 ReadsFile.close()
 
 # calculate shannon entropy for k-mers:
