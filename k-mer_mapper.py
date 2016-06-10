@@ -48,17 +48,16 @@ def plot(stuff):
 	plt.plot(sorted(stuff))
 	plt.ylabel('Shannon entropy')
 	#plt.show()
-	namebase=os.path.splitext(ReadsFileName)[0]
 	plt.savefig('{}_Shannon_entropy_ksize_{}.png'.format(namebase, ksize))
 
 def kmerInfo(stuff):
 	number=len(stuff)
 	mean=np.mean(stuff)
 	median=np.median(stuff)
-	print("Number of k-mers: {}, mean Shannon entropy: {}.".format(number,mean))
+	statout.write("\nSTATISTICS\n\nNumber of k-mers: {}\nMean Shannon entropy: {}.".format(number,mean))
 
 def remove_lowsh(Dict):
-	print("Removing low complexity k-mers.")
+	#print("Removing low complexity k-mers.")
 	for key in Dict.keys():
 		val=float(Dict[key])
 		#print(val)
@@ -70,6 +69,16 @@ def remove_lowsh(Dict):
 
 #################################################
 # k-merize reads
+
+namebase=os.path.splitext(ReadsFileName)[0]
+
+statoutPath=('{}_{}_statistics.txt'.format(namebase, ksize))
+outPath=('{}_{}_out.txt'.format(namebase, ksize))
+
+statout=open(statoutPath,'w')
+out=open(outPath,'w')
+
+statout.write('INPUT\n\nReads file: {}\nReference file: {}\nk-mer size: {}.\n\n'.format(ReadsFileName, RefFileName, ksize))
 
 ReadsFile=open(ReadsFileName,'r')
 
@@ -99,7 +108,11 @@ for hk in hash.keys():
 
 
 if args.m:
+	statout.write("Masking low complexity regions.\n\n")
 	remove_lowsh(Hdict)
+else:
+	statout.write("Not using low complexity mask.\n\n")
+
 
 plot(Hdict.values())
 
@@ -116,7 +129,10 @@ RefFile=open(RefFileName,'r')
 refseqs={}
 
 # printing header for output table:
-print("Sequence description\tNumber of mapped k-mers\tApproximate number of mapped reads")
+out.write("Sequence description\tNumber of mapped k-mers\tApproximate number of mapped reads")
+
+nkstat={}
+nmapstat={}
 
 for seq_record in SeqIO.parse(RefFile, "fasta"):
 
@@ -132,15 +148,28 @@ for seq_record in SeqIO.parse(RefFile, "fasta"):
 			count = refseqs.get(header,0)+hash[hashkey]
 		refseqs[header] = float(count)
 
-	print(header + "\t" + str(refseqs[header]) + "\t" + str(refseqs[header]/ksize) )
+	nk=refseqs[header]
+	nmap=refseqs[header]/ksize
 
+	nkstat[header]=nk
+	nmapstat[header]=nmap
+
+	out.write(header + "\t" + str(nk) + "\t" + str(nmap) )
+
+	
+nreferences=len(nkstat.keys())
+kmean=np.mean(nkstat.values())
+mapmean=np.mean(nmapstat.values())
+
+statout.write("\nNumber of reference sequences: {}\nMean number of mapped k-mers per sequence: {}\nMean number of mapped reads per sequence: {}\n".format(nreferences, 
+kmean, mapmean))
 
 RefFile.close()
-
+statout.close()
+out.close
 
 # TODO:
 # has to accept fastq files for reads, not fasta
-# mask is optional argument
 # test different kmer sizes, how they affect mapping
 
 
